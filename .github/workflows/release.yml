@@ -28,7 +28,7 @@ jobs:
       # Opens a PR updating the plugin in kubernetes-sigs/krew-index. The very
       # first submission of .krew.yaml has to be done by hand, so don't fail
       # the release before that.
-      - uses: rajatjindal/krew-release-bot@v0.0.46
+      - uses: rajatjindal/krew-release-bot@v0.0.51
         continue-on-error: true
 
   # Multi-arch Docker image on ghcr.io (shows up under "Packages").
