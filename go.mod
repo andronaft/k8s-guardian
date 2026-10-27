@@ -5,7 +5,7 @@ go 1.26.0
 toolchain go1.27.3
 
 require (
-	github.com/anthropics/anthropic-sdk-go v1.82.0
+	github.com/anthropics/anthropic-sdk-go v1.84.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/charmbracelet/x/term v0.2.2
