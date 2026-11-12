@@ -129,6 +129,8 @@ k8s-guardian was run against 30 popular Helm charts (ingress-nginx, kube-prometh
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development, the architecture and how to add a rule, and the [roadmap](docs/roadmap.md) for what's planned. [Good first issues](https://github.com/andronaft/k8s-guardian/issues?q=is%3Aopen+label%3A%22good+first+issue%22) come with pointers to the code. Security issues: [SECURITY.md](SECURITY.md). Release notes are on the [releases page](https://github.com/andronaft/k8s-guardian/releases).
 
+Why it exists: [Why valid Kubernetes YAML still breaks in prod](https://zhukovskyi.space/blog/kube-tooling-why/). Made by [Andrii Zhukovskyi](https://zhukovskyi.space/).
+
 ## License
 
 [Apache 2.0](LICENSE)
