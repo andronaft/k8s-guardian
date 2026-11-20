@@ -4,29 +4,9 @@ The plan lives in [GitHub milestones](https://github.com/andronaft/k8s-guardian/
 
 **Guiding principle:** a finding people can't trust is worse than no finding. Accuracy on real manifests comes before new features, and every new rule is run against [30 real Helm charts](real-world-test.md) before it ships.
 
-## Shipped: [v0.7.0](https://github.com/andronaft/k8s-guardian/releases/tag/v0.7.0), accuracy and CI ergonomics
+## Shipped: [v0.8.0](https://github.com/andronaft/k8s-guardian/releases/tag/v0.8.0), trust in `--fix`, speed, easy adoption
 
-`diff --server-side`, LV003 with taints and node affinity, Helm `--kube-version`, KG017 checked against the official guide, tests on macOS and Windows, and the 30-chart test in CI (#6–#11).
-
-## Ready to release: [v0.8.0](https://github.com/andronaft/k8s-guardian/milestone/2), trust in `--fix`, speed, easy adoption
-
-All on `main`:
-
-| | |
-|---|---|
-| [#21](https://github.com/andronaft/k8s-guardian/issues/21) | `--fix` writes only the lines it adds: 1,043 → 134 changed lines on the 30 charts |
-| [#20](https://github.com/andronaft/k8s-guardian/issues/20) | Linear-time checks: 24,000 objects in 2.6 s instead of 61 s |
-| [#19](https://github.com/andronaft/k8s-guardian/issues/19) | `diff --server-side` reports the API server's warnings (DF009): pods Pod Security will reject |
-| [#22](https://github.com/andronaft/k8s-guardian/issues/22) | SARIF: custom rules described, repository-relative URIs, schema-tested |
-| | `k8s-guardian init`: config, baseline and GitHub workflow in one step |
-| | GitHub Action `new-only`: a pull request fails only on problems it adds |
-| | `--live`: LV003 warns when no node has the pod's requests free |
-| [#13](https://github.com/andronaft/k8s-guardian/issues/13) | KG019: no host ports |
-| [#14](https://github.com/andronaft/k8s-guardian/issues/14) | KG020: PodDisruptionBudget for workloads with 2+ replicas |
-| [#17](https://github.com/andronaft/k8s-guardian/issues/17) | KG021: literal credentials in env values (the prototype was precise on real manifests) |
-| | KG013, KG014 and KG019 exported as ValidatingAdmissionPolicies and Kyverno policies, verified against a real API server and Kyverno |
-| | Every `kubectl` call has a timeout; unknown rules in `skip` are an error; Helm charts render their `crds/` |
-| [#29](https://github.com/andronaft/k8s-guardian/issues/29) | `rules --format json` for tooling |
+`--fix` writes only the lines it adds, linear-time checks, DF009 for the API server's warnings, SARIF for code scanning, `k8s-guardian init`, the Action's `new-only` mode, LV003 with node capacity in use, KG019–KG021, more rules exported as admission policies, `rules --format json`, and Kustomize overlays with `helmCharts` (#5, #13, #14, #17, #19–#22, #27, #29).
 
 ## Next: [v0.9.0](https://github.com/andronaft/k8s-guardian/milestone/4), coverage
 
@@ -40,7 +20,6 @@ Check what matters most in the Kubernetes security model, and more of the worklo
 | [#26](https://github.com/andronaft/k8s-guardian/issues/26) | GitHub Action: post the findings as a pull request comment |
 | [#30](https://github.com/andronaft/k8s-guardian/issues/30) | GitHub Action: use the release binary instead of building from source |
 | [#28](https://github.com/andronaft/k8s-guardian/issues/28) | LV003: required pod anti-affinity and topology spread constraints |
-| [#27](https://github.com/andronaft/k8s-guardian/issues/27) | Kustomize: render `helmCharts` entries *(good first issue)* |
 
 ## [Later](https://github.com/andronaft/k8s-guardian/milestone/3): ideas that need evidence first
 
