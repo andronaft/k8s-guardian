@@ -29,7 +29,7 @@ examples/insecure-deployment.yaml  Deployment/web
 * **Files and directories.** Directories are walked recursively. `node_modules`, `vendor`, dot-directories and symlinks are skipped, and YAML that isn't Kubernetes is skipped with a warning. A broken file that looks like a manifest fails the check. Use `exclude` in the [config file](configuration.md) to skip more.
 * **Helm charts** (a directory with `Chart.yaml`) are rendered with `helm template`. For a chart passed with `-f`, `--values file` and `--set key=value` (both repeatable) are passed on, so you check what you actually deploy.
 * **The Kubernetes version** charts are rendered for (`.Capabilities.KubeVersion`, `kubeVersion` constraints) comes from `--kube-version 1.33`, then `kubeVersion:` in the [config file](configuration.md), then the cluster's version when connected (`--live`, `diff`). Without any of them, the version built into your `helm` is used.
-* **Kustomize** overlays are rendered with `kustomize build` or `kubectl kustomize`.
+* **Kustomize** overlays are rendered with `kustomize build` or `kubectl kustomize`. Overlays that inflate Helm charts with `helmCharts` are rendered with `--enable-helm` when `helm` is in `PATH`; the chart values come from the kustomization (`valuesFile`, `valuesInline`), so `--values` and `--set` don't apply.
 * **Workloads:** Pods, Deployments, StatefulSets, DaemonSets, ReplicaSets, ReplicationControllers, Jobs, CronJobs and Argo Rollouts.
 
 ## Fixes

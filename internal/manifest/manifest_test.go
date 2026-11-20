@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -329,5 +330,64 @@ func TestHelmIncludesChartCRDs(t *testing.T) {
 	}
 	if strings.Join(kinds, ",") != "CustomResourceDefinition,Deployment" {
 		t.Errorf("rendered objects: %v", kinds)
+	}
+}
+
+// writeScript writes an executable shell script named name into dir.
+func writeScript(t *testing.T, dir, name, body string) {
+	t.Helper()
+	if err := os.WriteFile(filepath.Join(dir, name), []byte("#!/bin/sh\n"+body), 0o700); err != nil { // #nosec G306 -- test helper must be executable
+		t.Fatal(err)
+	}
+}
+
+func TestRenderKustomizationEnablesHelm(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("fake kubectl is a shell script")
+	}
+	bin := t.TempDir()
+	t.Setenv("PATH", bin)
+	// Like kustomize: overlays with helmCharts fail without --enable-helm.
+	writeScript(t, bin, "kubectl", `case "$*" in
+  "kustomize --enable-helm overlay") printf 'apiVersion: v1\nkind: Pod\nmetadata: {name: from-chart}\n' ;;
+  "kustomize overlay") echo 'Error: trouble configuring builtin HelmChartInflationGenerator: must specify --enable-helm' >&2; exit 1 ;;
+  *) echo "unexpected: $*" >&2; exit 2 ;;
+esac
+`)
+	_, err := RenderKustomization("overlay")
+	if err == nil || !strings.Contains(err.Error(), "overlay uses helmCharts, which needs `helm` in PATH") {
+		t.Fatalf("without helm: %v", err)
+	}
+	writeScript(t, bin, "helm", "exit 0\n")
+	f, err := RenderKustomization("overlay")
+	if err != nil || len(f.Objects) != 1 || f.Objects[0].Name() != "from-chart" || f.Writable {
+		t.Fatalf("with helm: %v %+v", err, f)
+	}
+}
+
+// TestRenderKustomizationHelmCharts runs the real tools on an overlay that
+// inflates a local chart.
+func TestRenderKustomizationHelmCharts(t *testing.T) {
+	if !lookPath("helm") || !lookPath("kustomize") {
+		t.Skip("helm or kustomize not installed")
+	}
+	dir := t.TempDir()
+	if err := os.CopyFS(filepath.Join(dir, "charts", "web"), os.DirFS("../cli/testdata/chart")); err != nil {
+		t.Fatal(err)
+	}
+	kust := "helmCharts:\n  - name: web\n    releaseName: web\n    valuesInline: {replicas: 3}\n"
+	if err := os.WriteFile(filepath.Join(dir, "kustomization.yaml"), []byte(kust), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	f, err := RenderKustomization(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// valuesInline from the kustomization reaches the chart.
+	if len(f.Objects) != 1 {
+		t.Fatalf("rendered %d objects", len(f.Objects))
+	}
+	if o := f.Objects[0]; o.Kind() != "Deployment" || yamlx.String(o.Root, "spec", "replicas") != "3" {
+		t.Fatalf("rendered %s with replicas %q", o.Ref(), yamlx.String(o.Root, "spec", "replicas"))
 	}
 }

@@ -538,21 +538,32 @@ func IsKustomization(dir string) bool {
 // falling back to `kubectl kustomize`. Nested kustomizations inside a walked
 // directory are not rendered automatically (bases and overlays would be
 // reported twice); pass the overlay directory itself with -f or -k.
+//
+// Overlays that inflate Helm charts (the helmCharts field) only build with
+// --enable-helm. The flag is added when the first build asks for it and helm
+// is installed, so overlays without charts and kubectl versions that don't
+// know the flag keep working as before.
 func RenderKustomization(dir string) (*File, error) {
-	var cmd *exec.Cmd
+	var name string
+	var args []string
 	switch {
 	case lookPath("kustomize"):
-		cmd = exec.Command("kustomize", "build", dir) // #nosec G204 -- no shell; plugins stay disabled
+		name, args = "kustomize", []string{"build"}
 	case lookPath("kubectl"):
-		cmd = exec.Command("kubectl", "kustomize", dir) // #nosec G204 -- no shell; plugins stay disabled
+		name, args = "kubectl", []string{"kustomize"}
 	default:
 		return nil, fmt.Errorf("%s is a Kustomize directory but neither `kustomize` nor `kubectl` was found in PATH", dir)
 	}
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	out, err := cmd.Output()
+	out, stderr, err := runKustomize(name, append(args, dir))
+	if err != nil && strings.Contains(stderr, "--enable-helm") {
+		if !lookPath("helm") {
+			return nil, fmt.Errorf("%s uses helmCharts, which needs `helm` in PATH: %s %s %s: %v: %s", dir, name, strings.Join(args, " "), dir, err, stderr)
+		}
+		out, stderr, err = runKustomize(name, append(args, "--enable-helm", dir))
+		args = append(args, "--enable-helm")
+	}
 	if err != nil {
-		return nil, fmt.Errorf("%s %s: %v: %s", cmd.Args[0], strings.Join(cmd.Args[1:], " "), err, strings.TrimSpace(stderr.String()))
+		return nil, fmt.Errorf("%s %s %s: %v: %s", name, strings.Join(args, " "), dir, err, stderr)
 	}
 	f, err := Parse(out, dir+" (kustomize)")
 	if err != nil {
@@ -560,6 +571,14 @@ func RenderKustomization(dir string) (*File, error) {
 	}
 	f.Writable = false
 	return f, nil
+}
+
+func runKustomize(name string, args []string) (out []byte, stderr string, err error) {
+	cmd := exec.Command(name, args...) // #nosec G204 -- no shell; kustomize plugins stay disabled
+	var buf bytes.Buffer
+	cmd.Stderr = &buf
+	out, err = cmd.Output()
+	return out, strings.TrimSpace(buf.String()), err
 }
 
 func lookPath(name string) bool {
