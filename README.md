@@ -52,7 +52,7 @@ flowchart LR
 | **Breaking-change detector** against what is deployed | `diff -f` | [diff](docs/diff.md) |
 | **Enforce in the cluster** with the same decisions as the CLI (tested against a real API server and Kyverno) | `export vap\|kyverno` | [enforce](docs/enforce.md) |
 | **Custom rules** in a small YAML format, no Rego | `--rules`, `.k8s-guardian/rules/` | [custom rules](docs/custom-rules.md) |
-| **CI**: GitHub Action with PR annotations, SARIF, pre-commit, Docker | `uses: andronaft/k8s-guardian@v0.7.0` | [CI](docs/ci.md) |
+| **CI**: GitHub Action with PR annotations, SARIF, pre-commit, Docker | `uses: andronaft/k8s-guardian@v0.8.0` | [CI](docs/ci.md) |
 | **kubectl plugin** and **MCP server** for Claude Code / Cursor | `kubectl guard`, `mcp` | [MCP](docs/mcp.md) |
 | **AI fixes** for what rules can't fix (optional, needs an API key) | `check --fix --ai` | [AI](docs/ai.md) |
 
@@ -106,7 +106,7 @@ examples/insecure-deployment.yaml  Deployment/web
 In GitHub Actions:
 
 ```yaml
-- uses: andronaft/k8s-guardian@v0.7.0
+- uses: andronaft/k8s-guardian@v0.8.0
   with:
     path: k8s/
 ```

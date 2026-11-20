@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: andronaft/k8s-guardian@v0.7.0
+      - uses: andronaft/k8s-guardian@v0.8.0
         with:
           path: k8s/ charts/my-app     # files, directories or Helm charts
           fail-on: error               # error | warning | info
@@ -69,7 +69,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v7
-  - uses: andronaft/k8s-guardian@v0.7.0
+  - uses: andronaft/k8s-guardian@v0.8.0
     with:
       path: k8s/
       sarif-file: k8s-guardian.sarif
@@ -84,7 +84,7 @@ steps:
 With cluster credentials in the job, you can block breaking changes before deploying:
 
 ```yaml
-  - uses: andronaft/k8s-guardian@v0.7.0        # also puts k8s-guardian on PATH
+  - uses: andronaft/k8s-guardian@v0.8.0        # also puts k8s-guardian on PATH
     with: {path: k8s/, live: "true", namespace: prod}
   - run: k8s-guardian diff -f k8s/ -n prod --format github
 ```
@@ -94,7 +94,7 @@ With cluster credentials in the job, you can block breaking changes before deplo
 Use `--format github|markdown|sarif|json` and the exit codes: `0` passed, `1` findings at or above `--fail-on` (default `error`), `2` usage or runtime error. The Docker image works anywhere:
 
 ```bash
-docker run --rm -v "$PWD:/work" ghcr.io/andronaft/k8s-guardian:0.7.0 check -f k8s/
+docker run --rm -v "$PWD:/work" ghcr.io/andronaft/k8s-guardian:0.8.0 check -f k8s/
 ```
 
 ## pre-commit
@@ -103,7 +103,7 @@ docker run --rm -v "$PWD:/work" ghcr.io/andronaft/k8s-guardian:0.7.0 check -f k8
 # .pre-commit-config.yaml
 repos:
   - repo: https://github.com/andronaft/k8s-guardian
-    rev: v0.7.0
+    rev: v0.8.0
     hooks:
       - id: k8s-guardian        # or k8s-guardian-fix
         files: ^k8s/.*\.ya?ml$

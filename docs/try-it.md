@@ -132,7 +132,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: andronaft/k8s-guardian@v0.7.0
+      - uses: andronaft/k8s-guardian@v0.8.0
         with:
           path: k8s/
 ```
