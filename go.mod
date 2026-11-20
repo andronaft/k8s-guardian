@@ -2,7 +2,7 @@ module github.com/andronaft/k8s-guardian
 
 go 1.26.0
 
-toolchain go1.27.3
+toolchain go1.27.4
 
 require (
 	github.com/anthropics/anthropic-sdk-go v1.82.0
