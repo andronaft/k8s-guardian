@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="k8s-guardian">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f2937"/>
+      <stop offset="1" stop-color="#0b1018"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b9dff"/>
+      <stop offset="1" stop-color="#2a4fd0"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0.5" stop-color="#000" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#000" stop-opacity="0.16"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <!-- the guardian: a shield -->
+  <path d="M128 36l72 26v60c0 48-31 80-72 98-41-18-72-50-72-98V62z" fill="url(#shield)"/>
+  <path d="M128 36l72 26v60c0 48-31 80-72 98-41-18-72-50-72-98V62z" fill="url(#shade)"/>
+  <path d="M128 36l72 26v60c0 48-31 80-72 98-41-18-72-50-72-98V62z" fill="none" stroke="#9cc4ff" stroke-opacity="0.55" stroke-width="4" stroke-linejoin="round"/>
+  <!-- the cluster: a heptagon -->
+  <path d="M128 74l35.96 17.32 8.89 38.92-24.89 31.21h-39.92l-24.89-31.21 8.89-38.92z" fill="#0b1018" fill-opacity="0.28" stroke="#e6edf3" stroke-width="9" stroke-linejoin="round"/>
+  <!-- the verdict: it passes -->
+  <path d="M107 122l15 15 28-31" fill="none" stroke="#4ade80" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
