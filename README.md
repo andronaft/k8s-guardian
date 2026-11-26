@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/icon.svg" width="128" height="128" alt="k8s-guardian icon"></p>
+
 # 🛡️ k8s-guardian
 
 > **Kubernetes guardrails that know your cluster**: check and safely fix manifests, Helm charts and Kustomize overlays, see whether they fit the target cluster, and enforce the same rules at admission time. A CLI, a `kubectl` plugin, a GitHub Action and an MCP server in one binary.
